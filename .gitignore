@@ -1,4 +1,44 @@
-/venv
-venv
-/env
-env
+## Python virtual environments
+/venv/
+venv/
+/env/
+env/
+.venv/
+
+## Python cache and build artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+dist/
+build/
+*.egg-info/
+.eggs/
+
+## Editor and OS files
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+## Local environment files
+.env
+.env.*
+*.local
+
+## Logs and temporary files
+*.log
+*.tmp
+*.temp
+
+## Data and generated outputs
+resources-and-scripts/OIDv4_ToolKit/OID/
+resources-and-scripts/OIDv4_ToolKit/modules/__pycache__/
