@@ -42,3 +42,4 @@ Thumbs.db
 ## Data and generated outputs
 resources-and-scripts/OIDv4_ToolKit/OID/
 resources-and-scripts/OIDv4_ToolKit/modules/__pycache__/
+code/notebooks/Data/
