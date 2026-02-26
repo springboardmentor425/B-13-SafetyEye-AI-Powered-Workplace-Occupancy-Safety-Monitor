@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this project, please cite it using this metadata."
+title: "SafetyEye: AI-Powered Workplace Occupancy and Safety Monitor"
+type: software
+authors:
+  - family-names: "Team"
+    given-names: "SafetyEye"
+repository-code: "https://github.com/springboardmentor425/B-13-SafetyEye-AI-Powered-Workplace-Occupancy-Safety-Monitor"
+license: "MIT"
+version: "0.1.0"
+date-released: "2026-02-25"
