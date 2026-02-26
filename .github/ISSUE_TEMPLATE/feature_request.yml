@@ -1,0 +1,31 @@
+name: Feature request
+description: Propose an enhancement for SafetyEye.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem statement
+      description: What problem are you trying to solve?
+      placeholder: A clear description of the problem or gap.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Describe your proposed approach.
+      placeholder: Technical details, expected behavior, and tradeoffs.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: What alternatives have you considered?
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Add links, references, or examples.

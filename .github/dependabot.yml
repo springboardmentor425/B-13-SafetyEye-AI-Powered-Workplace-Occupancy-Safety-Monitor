@@ -1,0 +1,7 @@
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    directory: "/resources-and-scripts/OIDv4_ToolKit"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
