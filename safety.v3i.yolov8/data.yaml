@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 10
+names: ['No Gloves', 'No Helmet', 'gloves', 'helmet', 'jacket', 'no jacket', 'nogloves', 'nosafety glasses', 'safety glasses', 'shoes']
+
+roboflow:
+  workspace: harish-r0g1w
+  project: safety-n1jq2
+  version: 3
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/harish-r0g1w/safety-n1jq2/dataset/3
