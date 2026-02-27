@@ -1,0 +1,10 @@
+path: E:/B-13-SafetyEye-AI-Powered-Workplace-Occupancy-Safety-Monitor-main/dataset
+
+train: train/images
+val: valid/images
+test: test/images
+
+names:
+  0: helmet
+  1: head
+  2: person
