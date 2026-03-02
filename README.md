@@ -1,79 +1,57 @@
-# SafetyEye
+# 🚨 SafetyEye AI: Real-Time PPE Compliance Monitor
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-![Python](https://img.shields.io/badge/Python-3.x-blue)
-![Status](https://img.shields.io/badge/Status-Active%20Development-green)
+SafetyEye is an AI-powered workplace safety monitoring system. It uses **YOLOv8** computer vision to detect workers and ensure they are wearing proper Personal Protective Equipment (PPE) in real-time.
 
-AI-powered workplace occupancy and safety monitoring focused on PPE compliance detection from image/video streams.
+## 📖 Project Overview
+SafetyEye is designed to automate safety inspections in industrial environments. By leveraging deep learning, the system monitors live camera feeds to detect whether workers are following safety protocols. Its main goal is to improve workplace safety, reduce accidents, and ensure compliance with safety regulations automatically.
 
-## Overview
+## ✨ Key Features
+* **Live Surveillance Feed:** Real-time monitoring via webcam or connected camera systems.
+* **Full PPE Detection:** Specifically trained to track **Helmets**, **Boots**, **Goggles**, and **Gloves**.
+* **Instant Violation Alerts:** High-contrast visual overlays appear immediately when safety gear is missing.
+* **Modern AI Dashboard:** Futuristic dark-themed interface with high-visibility neon metrics.
+* **Full-Screen Capability:** Dedicated button to expand the camera feed to the entire laptop screen for focused monitoring.
 
-SafetyEye aims to help administrators monitor safety compliance in office and industrial spaces using computer vision. The documented target outcomes are:
-- Detect PPE violations such as missing helmets and related gear.
-- Generate alerts and compliance insights.
-- Present results through a real-time monitoring dashboard.
+## 🛠️ Tech Stack
+* **AI Engine:** YOLOv8 (Ultralytics)
+* **Web Interface:** Streamlit
+* **Computer Vision:** OpenCV
+* **Programming Language:** Python 3.9+
 
-## Scope
+## 🚀 Quick Setup Guide
 
-- Data preparation for YOLO-compatible datasets.
-- PPE model training (YOLOv8 planned stack).
-- Real-time detection and rule-based violation logic.
-- Alerting layer for safety incidents.
-- Dashboard with live feed and compliance metrics.
+1. **Clone the Repository:**
+   ```bash
+   git clone [https://github.com/YOUR_USERNAME/SafetyEye-AI.git](https://github.com/YOUR_USERNAME/SafetyEye-AI.git)
+   cd SafetyEye-AI
+Install Required Libraries:
 
-## Project Milestones
-
-- Week 1-2: Data preparation and environment setup.
-- Week 3-4: Model training, validation, and tuning.
-- Week 5-6: Real-time inference and alert engine.
-- Week 7-8: Dashboard integration and final system testing.
-
-## Repository Layout
-
-- `code/`: Main project code area for SafetyEye modules.
-- `resources-and-scripts/OIDv4_ToolKit/`: Open Images download/label tooling.
-- `resources-and-scripts/USAGE.md`: OS-specific environment setup and command usage.
-- `project-docs/`: Project brief and planning documentation.
-
-## Quick Start
-
-1. Clone the repository.
-2. Create and activate a virtual environment (see `resources-and-scripts/USAGE.md`).
-3. Install toolkit dependencies:
-
-```bash
-cd resources-and-scripts/OIDv4_ToolKit
+Bash
 pip install -r requirements.txt
-```
+Launch the Application:
 
-4. Example OID download:
+Bash
+streamlit run app.py
+🛡️ Monitoring Capabilities
+The AI system is programmed to identify the following safety breaches:
 
-```bash
-python .\main.py downloader -y --classes Goggles Helmet --type_csv validation --multiclasses 1 --limit 30
-```
+🪖 Head Protection: Detects Missing Helmets
 
-## Dataset References
+🥾 Foot Protection: Detects Missing Safety Boots
 
-- Construction Site Safety Image Dataset (Kaggle/Roboflow):
-  https://www.kaggle.com/datasets/snehilsanyal/construction-site-safety-image-dataset-roboflow
-- Open Images Toolkit (included under `resources-and-scripts/OIDv4_ToolKit`).
+🥽 Eye Protection: Detects Missing Goggles
 
-## Governance and Community
+🧤 Hand Protection: Detects Missing Gloves
 
-- [Contributing Guide](CONTRIBUTING.md)
-- [Code of Conduct](CODE_OF_CONDUCT.md)
-- [Security Policy](SECURITY.md)
-- [Support](SUPPORT.md)
-- [Changelog](CHANGELOG.md)
-- [Citation Metadata](CITATION.cff)
+Developed for Industrial Safety Excellence.
 
-## Documentation
 
-- Project brief:
-  `project-docs/AI SafetyEye-AI Powered Workplace Occupancy & Safety Monitor.pdf`
-- Usage:
-  `resources-and-scripts/USAGE.md`
+---
 
-## License
+### **Quick Deployment Checklist:**
+To make sure your GitHub and Deployment work perfectly, ensure your folder looks exactly like this:
+* `app.py` (The final code I gave you)
+* `README.md` (The English content above)
+* `requirements.txt` (With the 4 libraries: `streamlit`, `ultralytics`, `opencv-python-headless`, and `numpy`)
+* `runs/detect/train/weights/best.pt` (Your model file)
 
-This repository is licensed under the terms in [LICENSE](LICENSE).

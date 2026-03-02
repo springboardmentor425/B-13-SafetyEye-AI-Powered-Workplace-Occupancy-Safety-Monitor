@@ -1,0 +1,30 @@
+Create a new file named requirements.txt in your main project folder and paste these four lines into it:
+
+Plaintext
+streamlit
+ultralytics
+opencv-python-headless
+numpy
+Important Note for Deployment:
+I have used opencv-python-headless instead of opencv-python. This is crucial for deploying on GitHub/Streamlit Cloud because cloud servers do not have a GUI (Graphical User Interface), and the standard OpenCV will cause an error. This "headless" version works perfectly for cloud deployment.
+
+Final Project Structure Checklist:
+Before you upload to GitHub, make sure your folder looks like this:
+
+📁 Your-Project-Folder
+
+📄 app.py
+
+📄 requirements.txt
+
+📄 README.md
+
+📁 runs
+
+📁 detect
+
+📁 train
+
+📁 weights
+
+📄 best.pt
