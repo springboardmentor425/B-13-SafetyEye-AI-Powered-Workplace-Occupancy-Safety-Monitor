@@ -1,0 +1,17 @@
+names:
+- goggle
+- helmet
+- no_goggle
+- no_helmet
+- no_vest
+- vest
+nc: 6
+roboflow:
+  license: CC BY 4.0
+  project: final-bjy6w
+  url: https://universe.roboflow.com/poojams-workspace/final-bjy6w/dataset/1
+  version: 1
+  workspace: poojams-workspace
+test: ../test/images
+train: ../train/images
+val: ../valid/images
