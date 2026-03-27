@@ -35,4 +35,4 @@ export const predict = (formData) =>
   http.post('/predict', formData)
 
 export const healthCheck = () =>
-  http.get('/')
+  http.get('/health')
