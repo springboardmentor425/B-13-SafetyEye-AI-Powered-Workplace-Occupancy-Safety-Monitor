@@ -9,3 +9,4 @@ psycopg2-binary==2.9.9
 opencv-python-headless==4.8.1.78
 onnxruntime==1.19.0
 aiofiles==23.2.1
+yt-dlp

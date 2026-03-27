@@ -1,3 +1,4 @@
+import glob
 import io
 import base64
 import os
@@ -28,6 +29,7 @@ model = SafetyEyeModel(str(MODEL_PATH))
 
 # In-memory job tracker for background video processing
 _jobs: dict[str, dict] = {}
+_cancel_events: dict[str, threading.Event] = {}
 
 
 @app.on_event("startup")
@@ -331,19 +333,95 @@ def _run_processor(job_id: str, video_path: str, location: Optional[str], interv
     """Runs in a background thread; updates _jobs on progress/completion."""
     from video_processor import process_video
 
+    cancel_event = threading.Event()
+    _cancel_events[job_id] = cancel_event
     _jobs[job_id]["status"] = "processing"
+
+    def on_frame(source_id, frame_path, frame_number, total_frames):
+        _jobs[job_id]["latest_frame_path"] = frame_path
+        _jobs[job_id]["frames_processed"] = frame_number
+        _jobs[job_id]["total_frames"] = total_frames
+        _jobs[job_id]["source_id"] = source_id
+
     try:
-        process_video(video_path, location=location, interval=interval)
-        _jobs[job_id]["status"] = "done"
+        process_video(video_path, location=location, interval=interval,
+                      on_frame=on_frame, cancel_event=cancel_event)
+        _jobs[job_id]["status"] = "cancelled" if cancel_event.is_set() else "done"
         _jobs[job_id]["finished_at"] = datetime.utcnow().isoformat()
     except Exception as e:
         _jobs[job_id]["status"] = "failed"
         _jobs[job_id]["error"] = str(e)
     finally:
-        # Clean up the temp file if we created one
+        _cancel_events.pop(job_id, None)
         tmp = _jobs[job_id].get("_tmp_path")
         if tmp and Path(tmp).exists():
             Path(tmp).unlink(missing_ok=True)
+
+
+def _run_youtube_processor(job_id: str, url: str, location: Optional[str], interval: int):
+    """Downloads a YouTube video then processes it; updates _jobs throughout."""
+    import yt_dlp
+    from video_processor import process_video
+
+    cancel_event = threading.Event()
+    _cancel_events[job_id] = cancel_event
+    tmp_dir = tempfile.mkdtemp()
+    _jobs[job_id]["_tmp_dir"] = tmp_dir
+
+    try:
+        _jobs[job_id]["status"] = "downloading"
+
+        def cancel_hook(d):
+            if cancel_event.is_set():
+                raise Exception("Download cancelled by user")
+
+        ydl_opts = {
+            "format": "bestvideo[height<=720]+bestaudio/bestvideo+bestaudio/best",
+            "outtmpl": os.path.join(tmp_dir, "video.%(ext)s"),
+            "quiet": True,
+            "no_warnings": True,
+            "merge_output_format": "mp4",
+            "progress_hooks": [cancel_hook],
+        }
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(url, download=True)
+            title = (info or {}).get("title", "YouTube Video")
+
+        if cancel_event.is_set():
+            _jobs[job_id]["status"] = "cancelled"
+            _jobs[job_id]["finished_at"] = datetime.utcnow().isoformat()
+            return
+
+        files = sorted(glob.glob(os.path.join(tmp_dir, "video.*")))
+        if not files:
+            raise ValueError("Download produced no output file")
+        tmp_path = files[-1]
+
+        _jobs[job_id]["filename"] = title
+        _jobs[job_id]["youtube_title"] = title
+        _jobs[job_id]["status"] = "processing"
+
+        def on_frame(source_id, frame_path, frame_number, total_frames):
+            _jobs[job_id]["latest_frame_path"] = frame_path
+            _jobs[job_id]["frames_processed"] = frame_number
+            _jobs[job_id]["total_frames"] = total_frames
+            _jobs[job_id]["source_id"] = source_id
+
+        process_video(tmp_path, location=location, interval=interval,
+                      on_frame=on_frame, cancel_event=cancel_event)
+        _jobs[job_id]["status"] = "cancelled" if cancel_event.is_set() else "done"
+        _jobs[job_id]["finished_at"] = datetime.utcnow().isoformat()
+
+    except Exception as e:
+        if cancel_event.is_set():
+            _jobs[job_id]["status"] = "cancelled"
+            _jobs[job_id]["finished_at"] = datetime.utcnow().isoformat()
+        else:
+            _jobs[job_id]["status"] = "failed"
+            _jobs[job_id]["error"] = str(e)
+    finally:
+        _cancel_events.pop(job_id, None)
+        shutil.rmtree(tmp_dir, ignore_errors=True)
 
 
 @app.post("/process-video")
@@ -380,6 +458,57 @@ async def process_video_endpoint(
     )
 
     return {"job_id": job_id, "status": "pending", "filename": video.filename}
+
+
+@app.post("/process-youtube")
+async def process_youtube_endpoint(
+    background_tasks: BackgroundTasks,
+    url: str = Query(..., description="YouTube video URL"),
+    location: Optional[str] = Query(None, description="Camera/zone label"),
+    interval: int = Query(25, description="Process every Nth frame"),
+):
+    """
+    Download a YouTube video at 720p and process it in the background.
+    Returns a job_id to track progress via GET /jobs/{job_id}.
+    """
+    job_id = str(uuid.uuid4())
+    _jobs[job_id] = {
+        "job_id": job_id,
+        "filename": None,
+        "youtube_url": url,
+        "location": location,
+        "interval": interval,
+        "status": "pending",
+        "created_at": datetime.utcnow().isoformat(),
+    }
+    background_tasks.add_task(_run_youtube_processor, job_id, url, location, interval)
+    return {"job_id": job_id, "status": "pending", "youtube_url": url}
+
+
+@app.get("/jobs/{job_id}/preview")
+def get_job_preview(job_id: str):
+    """Return the latest annotated frame for a running or completed job."""
+    if job_id not in _jobs:
+        raise HTTPException(status_code=404, detail="Job not found")
+    frame_path = _jobs[job_id].get("latest_frame_path")
+    if not frame_path or not Path(frame_path).exists():
+        raise HTTPException(status_code=404, detail="No preview available yet")
+    return FileResponse(frame_path, media_type="image/jpeg")
+
+
+@app.post("/jobs/{job_id}/cancel")
+def cancel_job(job_id: str):
+    """Request cancellation of a running job."""
+    if job_id not in _jobs:
+        raise HTTPException(status_code=404, detail="Job not found")
+    status = _jobs[job_id].get("status")
+    if status in ("done", "failed", "cancelled"):
+        return {"job_id": job_id, "status": status, "message": "Job already finished"}
+    event = _cancel_events.get(job_id)
+    if event:
+        event.set()
+    _jobs[job_id]["status"] = "cancelling"
+    return {"job_id": job_id, "status": "cancelling"}
 
 
 @app.get("/jobs/{job_id}")

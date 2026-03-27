@@ -18,7 +18,7 @@ build/
 # ── Model weights ─────────────────────────────────────────────────────────
 model/weights/last.pt
 model/weights/best.pt
-model/weights/best.onnx   # too large for GitHub (212MB) — CI pulls from Docker Hub
+model/weights/best.onnx
 
 # ── Output data ───────────────────────────────────────────────────────────
 frames/

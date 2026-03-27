@@ -29,7 +29,7 @@ from database import SessionLocal, create_tables
 from models import Detection, DetectionSession, VideoSource, Violation
 
 
-def process_video(video_path: str, location: str = None, interval: int = None):
+def process_video(video_path: str, location: str = None, interval: int = None, on_frame=None, cancel_event=None):
     interval = interval or FRAME_SAMPLE_INTERVAL
     frames_dir = Path(FRAMES_OUTPUT_DIR)
     frames_dir.mkdir(exist_ok=True)
@@ -70,6 +70,9 @@ def process_video(video_path: str, location: str = None, interval: int = None):
         while True:
             ret, frame = cap.read()
             if not ret:
+                break
+
+            if cancel_event and cancel_event.is_set():
                 break
 
             if frame_number % interval != 0:
@@ -114,6 +117,14 @@ def process_video(video_path: str, location: str = None, interval: int = None):
             frame_filename = f"{source.id}_f{frame_number:07d}.jpg"
             frame_path = str(frames_dir / frame_filename)
             cv2.imwrite(frame_path, annotated)
+
+            if on_frame:
+                on_frame(
+                    source_id=source.id,
+                    frame_path=frame_path,
+                    frame_number=frame_number,
+                    total_frames=total_frames,
+                )
 
             # Write detection session
             session_obj = DetectionSession(
@@ -163,8 +174,8 @@ def process_video(video_path: str, location: str = None, interval: int = None):
 
             frame_number += 1
 
-        # Mark source as done
-        source.status = "done"
+        # Mark source as done or cancelled
+        source.status = "cancelled" if (cancel_event and cancel_event.is_set()) else "done"
         source.processed_at = datetime.utcnow()
         db.commit()
 
