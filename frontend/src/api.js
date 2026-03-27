@@ -19,8 +19,14 @@ export const getSources = () =>
 export const uploadVideo = (formData, params) =>
   http.post('/process-video', formData, { params })
 
+export const processYoutube = (params) =>
+  http.post('/process-youtube', null, { params })
+
 export const getJob = (id) =>
   http.get(`/jobs/${id}`)
+
+export const cancelJob = (id) =>
+  http.post(`/jobs/${id}/cancel`)
 
 export const getJobs = () =>
   http.get('/jobs')
