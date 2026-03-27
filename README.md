@@ -51,8 +51,11 @@ docker compose -f docker-compose.hub.yml down
 
 | Feature | Description |
 |---|---|
-| 🎥 **Video Processing** | Upload any MP4/AVI video — the AI scans every frame for PPE violations |
+| 🎥 **Video Upload** | Upload MP4/AVI videos — AI scans every frame for PPE violations |
+| 🌐 **YouTube Support** | Paste a YouTube URL → auto-downloads at 720p and processes it |
 | 📷 **Live Webcam** | Stream from your camera and get real-time detection results |
+| ⏱️ **Live Preview** | Watch detection frames update live during video processing |
+| 📋 **Job Management** | View all running jobs, monitor progress, cancel anytime |
 | ⚠️ **Violations Feed** | Browse, filter, and acknowledge detected safety violations |
 | 📊 **Grafana Dashboard** | Rich analytics: compliance rate, violation trends, occupancy heatmaps |
 | 🔌 **REST API** | Full API with Swagger docs at `/docs` |
@@ -196,22 +199,39 @@ docker push your-dockerhub-username/safety-eye:latest
 
 ## 📡 API Reference
 
+### Inference
 | Method | Endpoint | Description |
 |---|---|---|
-| `GET` | `/` | Health check |
+| `GET` | `/health` | Health check |
 | `POST` | `/predict` | Run inference on an image, returns annotated result |
 | `POST` | `/predict-raw` | Run inference, returns JSON only |
+
+### Video Processing
+| Method | Endpoint | Description |
+|---|---|---|
 | `POST` | `/process-video` | Upload video for background processing |
-| `GET` | `/jobs/{id}` | Check video processing job status |
-| `GET` | `/jobs` | List all jobs |
+| `POST` | `/process-youtube` | Process YouTube URL (auto-downloads at 720p) |
+
+### Job Management
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/jobs` | List all processing jobs |
+| `GET` | `/jobs/{id}` | Check job status |
+| `GET` | `/jobs/{id}/preview` | Get latest annotated frame from a job |
+| `POST` | `/jobs/{id}/cancel` | Cancel a running job |
+
+### Data & Analysis
+| Method | Endpoint | Description |
+|---|---|---|
 | `GET` | `/sessions` | List all detection sessions |
 | `GET` | `/sessions/{id}/frame` | Get annotated JPEG for a session |
+| `GET` | `/sessions/{id}/detections` | Get all detections for a session |
 | `GET` | `/violations` | List violations (filterable by type, severity, status) |
 | `PATCH` | `/violations/{id}/acknowledge` | Mark a violation as acknowledged |
-| `GET` | `/stats` | Summary statistics |
+| `GET` | `/stats` | Summary statistics (compliance rate, violation count, etc.) |
 | `GET` | `/sources` | List processed video sources |
 
-Full interactive documentation: **http://localhost:8100/docs**
+**Full interactive documentation:** http://localhost:8100/docs
 
 ---
 
