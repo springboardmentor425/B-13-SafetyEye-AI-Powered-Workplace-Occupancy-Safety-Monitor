@@ -42,8 +42,8 @@ async def startup_event():
 # Health
 # ---------------------------------------------------------------------------
 
-@app.get("/")
-async def root():
+@app.get("/health")
+async def health():
     return {"status": "alive", "message": "Safety Eye API is running"}
 
 
