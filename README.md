@@ -4,7 +4,7 @@
 ![Python](https://img.shields.io/badge/Python-3.x-blue)
 ![Status](https://img.shields.io/badge/Status-Active%20Development-green)
 
-AI-powered workplace occupancy and safety monitoring focused on PPE compliance detection from image/video streams.
+AI-powered workplace occupancy and safety monitoring focused on PPE compliance detection from image/video streams
 
 ## Overview
 
