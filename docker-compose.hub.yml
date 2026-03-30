@@ -50,6 +50,7 @@ services:
     restart: unless-stopped
 
   api:
+    platform: linux/amd64
     image: amalsalilan/safety-eye:latest
     container_name: safety_eye_api
     environment:
