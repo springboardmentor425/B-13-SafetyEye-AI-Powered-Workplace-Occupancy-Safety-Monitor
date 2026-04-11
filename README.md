@@ -2,11 +2,15 @@
 
 > Automatically detects PPE violations on construction sites using computer vision. Upload a video or use your webcam — Safety Eye flags workers missing helmets, gloves, boots, or goggles in real time.
 
+<<<<<<< HEAD
+AI-powered workplace occupancy and safety monitoring focused on PPE compliance detection from image/video streams
+=======
 ![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.104-009688?logo=fastapi&logoColor=white)
 ![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black)
 ![YOLOv8](https://img.shields.io/badge/YOLOv8-ONNX-FF6B35)
+>>>>>>> origin/main
 
 ---
 
