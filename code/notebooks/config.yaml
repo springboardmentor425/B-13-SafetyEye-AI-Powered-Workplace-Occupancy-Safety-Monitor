@@ -1,0 +1,17 @@
+path: D:/infosys/B-13-SafetyEye-AI-Powered-Workplace-Occupancy-Safety-Monitor/datasets/safetyeye
+
+train: images/train
+val: images/val
+
+nc: 9
+
+names:
+  0: vest
+  1: no-vest
+  2: shoes
+  3: no-shoes
+  4: googles
+  5: no-googles
+  6: helmet
+  7: no-helmet
+  8: machinery
