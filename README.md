@@ -138,7 +138,7 @@ All settings live in the `.env` file. Edit before running `docker compose up`:
 # Database
 DB_NAME=safety_eye
 DB_USER=postgres
-DB_PASSWORD=123          # change this in production
+DB_PASSWORD=123    
 DB_PORT=5433
 
 # API + Frontend
@@ -147,7 +147,7 @@ API_PORT=8100
 # Grafana
 GRAFANA_PORT=3100
 GRAFANA_USER=Admin
-GRAFANA_PASSWORD=MyStrongPass123   # change this in production
+GRAFANA_PASSWORD=MyStrongPass123  
 ```
 
 ## 🗄 Database Schema
